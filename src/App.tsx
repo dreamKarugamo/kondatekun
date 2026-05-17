@@ -328,7 +328,7 @@ const ALL_MENUS: MenuItem[] = [
         side: "小松菜の胡麻和え・お吸い物",
     },
     {
-        name: "鮭ときのきのオリーブ炒め",
+        name: "鮭ときのこのオリーブ炒め",
         category: "魚",
         diff: "普通",
         time: "30分",
@@ -606,7 +606,7 @@ export const MenuRoulette: React.FC = () => {
 const styles: { [key: string]: React.CSSProperties } = {
     body: {
         margin: 0,
-        fontFamily: "'Shippori Mincho', 'Yu Mincho', 'YuMincho', 'serif'",
+        fontFamily: "'Shippori Mincho', 'Yu Mincho', 'YuMincho', serif",
         backgroundColor: "#f7f9fc",
         color: "#333",
         display: "flex",
