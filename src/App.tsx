@@ -615,14 +615,15 @@ const styles: { [key: string]: React.CSSProperties } = {
         minHeight: "100vh",
     },
     header: {
-        width: "100%",
+        width: "45vw",
+        minWidth: "400px",
         backgroundColor: "#fff",
         padding: "15px 0 20px 0",
         textAlign: "center",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        position: "sticky",
+        // position: "sticky",
         top: 0,
-        zIndex: 100,
+        // zIndex: 100,
     },
     tabContainer: {
         display: "flex",
@@ -633,7 +634,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     tabButton: {
         padding: "8px 24px",
         borderRadius: "20px",
-        fontSize: "0.95rem",
+        fontSize: "0.5rem",
         fontWeight: "bold",
         cursor: "pointer",
         border: "1px solid #ddd",
@@ -648,7 +649,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     diffTabButton: {
         padding: "6px 16px",
         borderRadius: "15px",
-        fontSize: "0.85rem",
+        fontSize: "0.5rem",
         fontWeight: "600",
         cursor: "pointer",
         border: "1px solid #e2e8f0",
@@ -663,8 +664,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
     rouletteWrapper: {
         position: "relative",
-        width: "500px",
-        height: "500px",
+        width: "60vh",
+        height: "60vh",
         margin: "50px auto",
     },
     rouletteContainer: {
