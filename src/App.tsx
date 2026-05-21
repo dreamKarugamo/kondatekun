@@ -230,6 +230,14 @@ const ALL_MENUS: MenuItem[] = [
         ingredients: "豚挽肉,キャベツ,ニラ,餃子の皮",
         side: "もやしナムル・中華スープ",
     },
+    {
+        name: "チーズタッカルビ",
+        category: "アジア",
+        diff: "本格",
+        time: "45分",
+        ingredients: "鶏もも肉、さつまいも、キャベツ、たまねぎ、粉唐辛子、コチュジャン",
+        side: "もずく・サラダ",
+    },
     // 🐟 魚料理
     {
         name: "さばの味噌煮",
