@@ -1,349 +1,6 @@
 import { useState, useMemo, useRef } from "react";
-
-// =======================================
-// 型定義
-// =======================================
-type Category = "肉" | "魚" | "アジア";
-type Difficulty = "本格" | "普通" | "簡単";
-type FilterDifficulty = Difficulty | "すべて";
-
-interface MenuItem {
-    name: string;
-    category: Category;
-    diff: Difficulty;
-    time: string;
-    ingredients: string;
-    side: string;
-}
-
-// =======================================
-// メニューデータ
-// =======================================
-const ALL_MENUS: MenuItem[] = [
-    // 🥩 肉料理
-    {
-        name: "豚の生姜焼き",
-        category: "肉",
-        diff: "簡単",
-        time: "15分",
-        ingredients: "豚ロース肉,玉ねぎ,生姜,醤油,みりん",
-        side: "キャベツの千切り・豆腐の味噌汁",
-    },
-    {
-        name: "豚肉のしそとチーズ巻き",
-        category: "肉",
-        diff: "本格",
-        time: "45分",
-        ingredients: "豚ロース肉,チーズ,しそ,小麦粉,卵",
-        side: "サラダ",
-    },
-    {
-        name: "ハンバーグ",
-        category: "肉",
-        diff: "本格",
-        time: "50分",
-        ingredients: "合いびき肉,玉ねぎ,卵,パン粉,牛乳",
-        side: "コーンスープ・ポテトサラダ",
-    },
-    {
-        name: "肉じゃが",
-        category: "肉",
-        diff: "普通",
-        time: "35分",
-        ingredients: "豚バラ肉,じゃがいも,人参,玉ねぎ,しらたき",
-        side: "ほうれん草のお浸し・冷奴",
-    },
-    {
-        name: "鶏の照り焼き",
-        category: "肉",
-        diff: "普通",
-        time: "30分",
-        ingredients: "鶏もも肉,醤油,みりん,砂糖,酒",
-        side: "きんぴらごぼう・グリーンサラダ",
-    },
-    {
-        name: "豚キムチ炒め",
-        category: "肉",
-        diff: "簡単",
-        time: "20分",
-        ingredients: "豚バラ肉,キムチ,ニラ,もやし",
-        side: "わかめスープ・チョレギサラダ",
-    },
-    {
-        name: "牛丼",
-        category: "肉",
-        diff: "簡単",
-        time: "20分",
-        ingredients: "牛薄切り肉,玉ねぎ,紅生姜,だし汁",
-        side: "お新香・ポテトサラダ",
-    },
-    {
-        name: "親子丼",
-        category: "肉",
-        diff: "普通",
-        time: "30分",
-        ingredients: "鶏もも肉,卵,玉ねぎ,三つ葉,だし汁",
-        side: "ほうれん草の胡麻和え・味噌汁",
-    },
-    {
-        name: "チキン南蛮",
-        category: "肉",
-        diff: "本格",
-        time: "45分",
-        ingredients: "鶏もも肉,卵,タルタルソース,甘酢だれ",
-        side: "春雨サラダ・具だくさん味噌汁",
-    },
-    {
-        name: "ピーマンの肉詰め",
-        category: "肉",
-        diff: "普通",
-        time: "30分",
-        ingredients: "ピーマン,合いびき肉,玉ねぎ,卵",
-        side: "コンソメスープ・ひじきの煮物",
-    },
-    {
-        name: "豚のしそクリーム",
-        category: "肉",
-        diff: "本格",
-        time: "30分",
-        ingredients: "豚ロース肉,大葉,生クリーム,ニンニク",
-        side: "温野菜・バケット",
-    },
-    {
-        name: "タンドリーチキン",
-        category: "肉",
-        diff: "本格",
-        time: "40分",
-        ingredients: "鶏もも肉,ヨーグルト,カレー粉,ケチャップ",
-        side: "コンソメライス・ラッシー風ドリンク",
-    },
-    {
-        name: "クリームシチュー",
-        category: "肉",
-        diff: "普通",
-        time: "30分",
-        ingredients: "鶏もも肉,じゃがいも,人参,玉ねぎ,牛乳,ルウ",
-        side: "ガーリックトースト・サラダ",
-    },
-    {
-        name: "ナスとピーマンと豚肉の味噌炒め",
-        category: "肉",
-        diff: "普通",
-        time: "40分",
-        ingredients: "ナス、味噌、ピーマン、豚肉、味噌",
-        side: "キュウリ、味噌汁",
-    },
-    // 🌏 アジア料理
-    {
-        name: "麻婆豆腐",
-        category: "アジア",
-        diff: "簡単",
-        time: "15分",
-        ingredients: "豆腐,豚挽肉,長ねぎ,豆板醤,甜麺醤",
-        side: "中華クラゲ・焼売",
-    },
-    {
-        name: "ビビンバ丼",
-        category: "アジア",
-        diff: "普通",
-        time: "30分",
-        ingredients: "牛挽肉,ナムル,卵,コチュジャン",
-        side: "わかめスープ・キムチ",
-    },
-    {
-        name: "チンジャオロース",
-        category: "アジア",
-        diff: "簡単",
-        time: "20分",
-        ingredients: "牛細切り肉,ピーマン,筍,オイスターソース",
-        side: "卵スープ・春巻き",
-    },
-    {
-        name: "カオマンガイ",
-        category: "アジア",
-        diff: "簡単",
-        time: "20分",
-        ingredients: "鶏もも肉,米,生姜,ニンニク,パクチー",
-        side: "鶏だしスープ・きゅうりの和え物",
-    },
-    {
-        name: "エビチリ",
-        category: "アジア",
-        diff: "普通",
-        time: "30分",
-        ingredients: "海老,長ねぎ,ケチャップ,豆板醤",
-        side: "中華スープ・叩ききゅうり",
-    },
-    {
-        name: "プルコギ",
-        category: "アジア",
-        diff: "簡単",
-        time: "20分",
-        ingredients: "牛薄切り肉,玉ねぎ,人参,ニラ,春雨",
-        side: "サンチュ・キムチ",
-    },
-    {
-        name: "チャプチェ",
-        category: "アジア",
-        diff: "普通",
-        time: "25分",
-        ingredients: "韓国春雨,牛肉,ピーマン,椎茸,人参",
-        side: "韓国のり・ナムル",
-    },
-    {
-        name: "ホイコーロー",
-        category: "アジア",
-        diff: "簡単",
-        time: "15分",
-        ingredients: "豚バラ肉,キャベツ,ピーマン,甜麺醤",
-        side: "ワンタンスープ・杏仁豆腐",
-    },
-    {
-        name: "ナス入り油淋鶏",
-        category: "アジア",
-        diff: "本格",
-        time: "50分",
-        ingredients: "鶏もも肉,ナス,長ねぎ,醤油,酢",
-        side: "中華風冷奴・卵スープ",
-    },
-    {
-        name: "カレー",
-        category: "アジア",
-        diff: "普通",
-        time: "30分",
-        ingredients: "牛肉または豚肉,じゃがいも,人参,玉ねぎ,ルウ",
-        side: "福神漬け・らっきょう・サラダ",
-    },
-    {
-        name: "水餃子",
-        category: "アジア",
-        diff: "本格",
-        time: "45分",
-        ingredients: "冷凍または手作り餃子,白菜,長ねぎ,ポン酢",
-        side: "ザーサイ・炒飯",
-    },
-    {
-        name: "焼き餃子",
-        category: "アジア",
-        diff: "本格",
-        time: "45分",
-        ingredients: "豚挽肉,キャベツ,ニラ,餃子の皮",
-        side: "もやしナムル・中華スープ",
-    },
-    {
-        name: "チーズタッカルビ",
-        category: "アジア",
-        diff: "本格",
-        time: "45分",
-        ingredients: "鶏もも肉、さつまいも、キャベツ、たまねぎ、粉唐辛子、コチュジャン",
-        side: "もずく・サラダ",
-    },
-    // 🐟 魚料理
-    {
-        name: "さばの味噌煮",
-        category: "魚",
-        diff: "簡単",
-        time: "25分",
-        ingredients: "鯖,生姜,味噌,酒,砂糖",
-        side: "小松菜のお浸し・だし巻き卵",
-    },
-    {
-        name: "鰆とアスパラのソテー",
-        category: "魚",
-        diff: "普通",
-        time: "30分",
-        ingredients: "鰆,アスパラガス,カマンベールチーズ,バター",
-        side: "白ワイン・バゲット",
-    },
-    {
-        name: "鮭のタルタルソース",
-        category: "魚",
-        diff: "本格",
-        time: "45分",
-        ingredients: "鮭,卵,玉ねぎ,マヨネーズ,小麦粉",
-        side: "粉ふきいも・コンソメスープ",
-    },
-    {
-        name: "ブリステーキ",
-        category: "魚",
-        diff: "簡単",
-        time: "20分",
-        ingredients: "ブリ,ニンニク,醤油,バター",
-        side: "大根サラダ・お吸い物",
-    },
-    {
-        name: "アジフライ",
-        category: "魚",
-        diff: "本格",
-        time: "45分",
-        ingredients: "アジ,パン粉,卵,小麦粉,キャベツ",
-        side: "タルタルソース・豚汁",
-    },
-    {
-        name: "白身魚のホイル焼き",
-        category: "魚",
-        diff: "普通",
-        time: "30分",
-        ingredients: "白身魚,きのこ,玉ねぎ,バター,レモン",
-        side: "ジャーマンポテト・スープ",
-    },
-    {
-        name: "アクアパッツァ",
-        category: "魚",
-        diff: "本格",
-        time: "40分",
-        ingredients: "白身魚,あさり,プチトマト,オリーブ,白ワイン",
-        side: "ガーリックトースト・サラダ",
-    },
-    {
-        name: "カジキマグロのトマトソース",
-        category: "魚",
-        diff: "簡単",
-        time: "20分",
-        ingredients: "カジキマグロ,トマト缶,ニンニク,オリーブオイル",
-        side: "パスタ・グリル野菜",
-    },
-    {
-        name: "マグロしらす丼",
-        category: "魚",
-        diff: "簡単",
-        time: "20分",
-        ingredients: "マグロ,しらす,大葉,刻み海苔,醤油",
-        side: "茶碗蒸し・味噌汁",
-    },
-    {
-        name: "カキフライ",
-        category: "魚",
-        diff: "本格",
-        time: "40分",
-        ingredients: "牡蠣,パン粉,卵,小麦粉",
-        side: "レモン・キャベツの千切り",
-    },
-    {
-        name: "サンマの塩焼き",
-        category: "魚",
-        diff: "簡単",
-        time: "15分",
-        ingredients: "秋刀魚,塩,大根おろし",
-        side: "ひじきの煮物・味噌汁",
-    },
-    {
-        name: "イカと里芋の煮っころがし",
-        category: "魚",
-        diff: "本格",
-        time: "40分",
-        ingredients: "イカ,里芋,醤油,砂糖,みりん",
-        side: "小松菜の胡麻和え・お吸い物",
-    },
-    {
-        name: "鮭ときのこのオリーブ炒め",
-        category: "魚",
-        diff: "普通",
-        time: "30分",
-        ingredients: "鮭,オリーブ,ニンニク,パセリ",
-        side: "ポテトサラダ・パン",
-    },
-];
+import type { Category, FilterDifficulty, MenuItem } from "./types";
+import { ALL_MENUS } from "./data";
 
 // =======================================
 // 定数
@@ -449,10 +106,11 @@ export const MenuRoulette: React.FC = () => {
         <div style={styles.body}>
             {/* HEADER */}
             <header style={styles.header}>
-                <h1 style={{ margin: "15px 0 30px 0" }}>🍳 献立くん</h1>
+                <h1 style={styles.h1}>🍳 献立くん</h1>
 
                 {/* 1層目: カテゴリタブ */}
                 <div style={styles.tabContainer}>
+                    <span style={styles.span}>カテゴリー：</span>
                     {CATEGORIES.map((cat) => (
                         <button
                             key={cat.key}
@@ -474,6 +132,7 @@ export const MenuRoulette: React.FC = () => {
 
                 {/* 2層目: 難易度タブ */}
                 <div style={{ ...styles.tabContainer, marginTop: "12px" }}>
+                    <span style={styles.span}>難易度：</span>
                     {DIFFICULTIES.map((diff) => (
                         <button
                             key={diff.key}
@@ -582,7 +241,7 @@ export const MenuRoulette: React.FC = () => {
                             >
                                 🛒 買い物リスト:
                             </strong>
-                            <p style={{ margin: "0 0 12px 0" }}>
+                            <p style={styles.modalP}>
                                 {resultMenu.ingredients}
                             </p>
                             <strong
@@ -593,7 +252,7 @@ export const MenuRoulette: React.FC = () => {
                             >
                                 🥗 副菜のヒント:
                             </strong>
-                            <p style={{ margin: 0 }}>{resultMenu.side}</p>
+                            <p style={styles.modalP}>{resultMenu.side}</p>
                         </div>
                         <button
                             style={styles.closeBtn}
@@ -623,21 +282,34 @@ const styles: { [key: string]: React.CSSProperties } = {
         minHeight: "100vh",
     },
     header: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
         width: "45vw",
-        minWidth: "400px",
+        minWidth: "500px",
         backgroundColor: "#fff",
-        padding: "15px 0 20px 0",
+        padding: "0 0 20px 0",
         textAlign: "center",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        // position: "sticky",
         top: 0,
-        // zIndex: 100,
+    },
+    h1: {
+        margin: "0 0 20px",
+    },
+    span: {
+        display: "block",
+        fontSize: "0.7rem",
+        fontWeight: "700",
+        padding: "10px 0",
     },
     tabContainer: {
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "left",
+        width: "27vw",
+        minWidth: "500px",
         gap: "10px",
-        marginTop: "10px",
+        margin: "5px auto",
     },
     tabButton: {
         padding: "8px 24px",
@@ -674,7 +346,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         position: "relative",
         width: "60vh",
         height: "60vh",
-        margin: "50px auto",
+        margin: "30px auto",
     },
     rouletteContainer: {
         position: "relative",
@@ -772,6 +444,9 @@ const styles: { [key: string]: React.CSSProperties } = {
         alignItems: "center",
         zIndex: 1000,
     },
+    modalP: {
+        fontSize: "0.7rem",
+    },
     resultCard: {
         background: "#fff",
         padding: "30px",
@@ -794,7 +469,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
     info: {
         textAlign: "left",
-        fontSize: "0.9rem",
+        fontSize: "0.8rem",
         background: "#f9f9f9",
         padding: "15px",
         borderRadius: "10px",
