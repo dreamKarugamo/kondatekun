@@ -227,10 +227,17 @@ export const MenuRoulette: React.FC = () => {
                                 color: "#666",
                             }}
                         >
-                            <span>区分: {resultMenu.category}料理</span>
-                            <span style={{ marginLeft: "15px" }}>
-                                難易度: {resultMenu.diff}
-                            </span>
+                            <div>
+                                <div>
+                                    <span style={styles.span_category}>区分：</span>
+                                    <span> {resultMenu.category}料理</span>
+                                </div>
+                                <div>
+                                    <span style={styles.span_category}>難易度：</span>
+                                    <span>{resultMenu.diff}</span>
+                                </div>
+                            </div>
+                            
                         </div>
                         <div style={styles.info}>
                             <strong
@@ -310,6 +317,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         minWidth: "500px",
         gap: "10px",
         margin: "5px auto",
+        padding: "0 25px"
     },
     tabButton: {
         padding: "8px 24px",
@@ -458,6 +466,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     resultCardH2: {
         color: "#0666f7",
         margin: "15px 0 5px 0",
+    },
+    span_category: {
+        color: "#4CB232",
+        fontWeight: "700",
     },
     badge: {
         background: "#fff0e6",
