@@ -4,7 +4,7 @@ import type { MenuItem } from "./types";
 // メニューデータ
 // =======================================
 export const ALL_MENUS: MenuItem[] = [
-    // 🥩 肉料理
+    // ----------🥩 肉料理----------
     {
         name: "豚の生姜焼き",
         category: "肉",
@@ -19,6 +19,14 @@ export const ALL_MENUS: MenuItem[] = [
         diff: "本格",
         time: "45分",
         ingredients: "豚ロース肉,チーズ,しそ,小麦粉,卵",
+        side: "サラダ",
+    },
+    {
+        name: "チーズフォンデュ",
+        category: "肉",
+        diff: "本格",
+        time: "50分",
+        ingredients: "チーズ、鶏もも肉、にんじん、じゃがいも、フランスパン",
         side: "サラダ",
     },
     {
@@ -114,10 +122,10 @@ export const ALL_MENUS: MenuItem[] = [
         category: "肉",
         diff: "普通",
         time: "40分",
-        ingredients: "ナス、味噌、ピーマン、豚肉、味噌",
+        ingredients: "豚肉の薄切り、ナス、味噌、ピーマン、にんにく、長ネギ",
         side: "キュウリ、味噌汁",
     },
-    // 🌏 アジア料理
+    // ----------🌏 アジア料理----------
     {
         name: "麻婆豆腐",
         category: "アジア",
@@ -222,7 +230,7 @@ export const ALL_MENUS: MenuItem[] = [
         ingredients: "鶏もも肉、さつまいも、キャベツ、たまねぎ、粉唐辛子、コチュジャン",
         side: "もずく・サラダ",
     },
-    // 🐟 魚料理
+    // ---------- 🐟 魚料理 ----------
     {
         name: "さばの味噌煮",
         category: "魚",
@@ -238,6 +246,22 @@ export const ALL_MENUS: MenuItem[] = [
         time: "30分",
         ingredients: "鰆,アスパラガス,カマンベールチーズ,バター",
         side: "白ワイン・バゲット",
+    },
+    {
+        name: "パエリア",
+        category: "魚",
+        diff: "普通",
+        time: "60分",
+        ingredients: "有頭えび、アサリ、白身魚、パプリカ、玉ねぎ、サフラン",
+        side: "白ワイン・バゲット",
+    },
+    {
+        name: "アボカドサーモン丼",
+        category: "魚",
+        diff: "簡単",
+        time: "20分",
+        ingredients: "アボカド、サーモン、のり、わさび、ごま油",
+        side: "酢にんじん, 味噌汁",
     },
     {
         name: "鮭のタルタルソース",

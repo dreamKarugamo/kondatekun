@@ -40,6 +40,7 @@ export const MenuRoulette: React.FC = () => {
     const [isSpinning, setIsSpinning] = useState<boolean>(false);
     const [resultMenu, setResultMenu] = useState<MenuItem | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isChangingFilter, setIsChangingFilter] = useState<boolean>(false);
 
     // 回転累積角度の保持
     const rotationRef = useRef<number>(0);
@@ -70,10 +71,19 @@ export const MenuRoulette: React.FC = () => {
     // 条件変更時のリセット処理
     const handleFilterChange = (cat: Category, diff: FilterDifficulty) => {
         if (isSpinning) return;
+
+        // リセット時の逆回転を防ぐため、一時的にアニメーションを無効化
+        setIsChangingFilter(true);
+
         setCurrentCategory(cat);
         setCurrentDifficulty(diff);
         rotationRef.current = 0;
         setRotation(0);
+
+        // 状態の更新が反映された直後（50ms後）にアニメーションを有効に戻す
+        setTimeout(() => {
+            setIsChangingFilter(false);
+        }, 50);
     };
 
     const spin = () => {
@@ -162,6 +172,10 @@ export const MenuRoulette: React.FC = () => {
                         ...styles.rouletteContainer,
                         background: rouletteBackground,
                         transform: `rotate(${rotation}deg)`,
+                        // 💡 変更点：フィルター切り替え時のみ transition を "none" に動的切り替え
+                        transition: isChangingFilter
+                            ? "none"
+                            : "transform 4s cubic-bezier(0.1, 0, 0.1, 1)",
                     }}
                 >
                     {filteredMenus.length > 0 ? (
@@ -229,15 +243,18 @@ export const MenuRoulette: React.FC = () => {
                         >
                             <div>
                                 <div>
-                                    <span style={styles.span_category}>区分：</span>
+                                    <span style={styles.span_category}>
+                                        区分：
+                                    </span>
                                     <span> {resultMenu.category}料理</span>
                                 </div>
                                 <div>
-                                    <span style={styles.span_category}>難易度：</span>
+                                    <span style={styles.span_category}>
+                                        難易度：
+                                    </span>
                                     <span>{resultMenu.diff}</span>
                                 </div>
                             </div>
-                            
                         </div>
                         <div style={styles.info}>
                             <strong
@@ -317,7 +334,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         minWidth: "500px",
         gap: "10px",
         margin: "5px auto",
-        padding: "0 25px"
+        padding: "0 25px",
     },
     tabButton: {
         padding: "8px 24px",
@@ -365,7 +382,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         outline: "8px solid #333",
         boxShadow: "0 15px 40px rgba(0, 0, 0, 0.2)",
         overflow: "hidden",
-        transition: "transform 4s cubic-bezier(0.1, 0, 0.1, 1)",
+        // 💡 変更点：インラインスタイルの指定へ移行したため、ここからは transition を削除しました
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
