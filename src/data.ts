@@ -191,6 +191,14 @@ export const ALL_MENUS: MenuItem[] = [
         side: "ワンタンスープ・杏仁豆腐",
     },
     {
+        name: "八宝菜",
+        category: "アジア",
+        diff: "本格",
+        time: "45分",
+        ingredients: "豚バラ肉,海老、イカ、白菜、うずらの卵、キクラゲ",
+        side: "春菊の中華サラダ、スープ",
+    },
+    {
         name: "ナス入り油淋鶏",
         category: "アジア",
         diff: "本格",
